@@ -107,6 +107,30 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/chart',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'switch',
+        component: () => import('@/views/chart/index'),
+        meta: { title: '首页', icon: 'el-icon-pie-chart' }
+      }
+    ]
+  },
+  {
+    path: '/check',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'switch',
+        component: () => import('@/views/check/index'),
+        meta: { title: '审核', icon: 'el-icon-circle-check' }
+      }
+    ]
+  },
+  {
     path: '/changepw',
     component: Layout,
     hidden: true,
