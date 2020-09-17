@@ -94,15 +94,15 @@ export default {
     return {
       isLookBigImg: false, // 是否查看大场景
       dialogVisible: false,
-      listLoading: true,
+      listLoading: false,
       autoRefresh: true, // 自动刷新
       tableData: []
     }
   },
   mounted() {
-    this.fetchData()
-    clearInterval(intervalTimer)
-    this.autoRefreshChange(true)
+    // this.fetchData()
+    // clearInterval(intervalTimer)
+    // this.autoRefreshChange(true)
     // 下面是模拟数据
     // this.listLoading = false
     // this.tableData = [

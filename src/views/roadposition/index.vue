@@ -48,17 +48,17 @@
       />
       <el-table-column
         prop="date"
-        label="日期"
-        width="180"
+        label="路口方位"
+        width="300"
       />
       <el-table-column
         prop="name"
-        label="姓名"
-        width="180"
+        label="状态"
+        width="150"
       />
       <el-table-column
         prop="address"
-        label="地址"
+        label="所属路口"
       />
     </el-table>
     <div class="table_pagination">
@@ -74,7 +74,8 @@
 </template>
 
 <script>
-import { axios } from '@/utils/request'
+import axios from '@/utils/request'
+console.log(axios)
 
 export default {
   data() {
@@ -154,26 +155,10 @@ export default {
     onSearch() {
       this.searchData = this.form
       this.getTableData(1)
-      // this.listLoading = true
-      // axios.post('/enable_proc', {
-      //   big_cam: (this.form.big_cam_stat === 'running' ? 1 : 0),
-      //   middle_cam: (this.form.middle_cam_stat === 'running' ? 1 : 0)
-      // }).then((res) => {
-      //   this.listLoading = false
-      //   this.$message({
-      //     message: '设置成功',
-      //     type: 'success'
-      //   })
-      // }).catch((a) => {
-      //   this.listLoading = false
-      //   this.$message({
-      //     message: '获取数据异常',
-      //     type: 'error'
-      //   })
-      // })
     },
     handleClick(type) {
       console.log(type)
+      console.log(this.multipleSelection)
     }
   }
 }
