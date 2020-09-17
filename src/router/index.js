@@ -3,6 +3,8 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+// console.log(localStorage.getItem('username'))
+
 /* Layout */
 import Layout from '@/layout'
 
@@ -46,76 +48,61 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/setup/ntp'
+    redirect: '/roadposition/index'
   },
 
   {
-    path: '/setup',
-    component: Layout,
-    redirect: '/setup/ntp',
-    name: 'setup',
-    meta: { title: '设置', icon: 'el-icon-s-tools' },
-    children: [
-      {
-        path: 'ntp',
-        name: 'ntp',
-        component: () => import('@/views/setup/ntp'),
-        meta: { title: 'NTP服务器设置' }
-      },
-      {
-        path: 'ip',
-        name: 'ip',
-        component: () => import('@/views/setup/ip'),
-        meta: { title: '本机IP设置' }
-      },
-      {
-        path: 'server',
-        name: 'server',
-        component: () => import('@/views/setup/server'),
-        meta: { title: '服务器IP设置' }
-      },
-      {
-        path: 'camera1',
-        name: 'camera',
-        component: () => import('@/views/setup/camera1'),
-        meta: { title: '摄像机1设置' }
-      },
-      {
-        path: 'camera2',
-        name: 'camera',
-        component: () => import('@/views/setup/camera2'),
-        meta: { title: '摄像机2设置' }
-      }
-      // {
-      //   path: 'cameraline',
-      //   name: 'cameraline',
-      //   component: () => import('@/views/setup/cameraline'),
-      //   meta: { title: '摄像机画线设置' }
-      // }
-    ]
-  },
-
-  {
-    path: '/switch',
+    path: '/roadposition',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'switch',
-        component: () => import('@/views/switch/index'),
-        meta: { title: '监控', icon: 'el-icon-open' }
+        component: () => import('@/views/roadposition/index'),
+        meta: { title: '路口方位管理', icon: 'el-icon-s-operation' }
+      }
+    ]
+  },
+
+  {
+    path: '/road',
+    component: Layout,
+    redirect: '/road/list',
+    name: 'setup',
+    meta: { title: '路口管理', icon: 'el-icon-s-tools' },
+    children: [
+      {
+        path: 'list',
+        name: 'roadlist',
+        component: () => import('@/views/road/list'),
+        meta: { title: '路口列表' }
+      },
+      {
+        path: 'add',
+        name: 'roadadd',
+        component: () => import('@/views/road/add'),
+        meta: { title: '新增/修改路口' }
       }
     ]
   },
   {
-    path: '/list',
+    path: '/police',
     component: Layout,
+    redirect: '/police/list',
+    name: 'setup',
+    meta: { title: '派出所管理', icon: 'el-icon-s-custom' },
     children: [
       {
-        path: 'index',
-        name: 'list',
-        component: () => import('@/views/list/index'),
-        meta: { title: '违法列表', icon: 'el-icon-tickets' }
+        path: 'list',
+        name: 'policelist',
+        component: () => import('@/views/police/list'),
+        meta: { title: '派出所列表' }
+      },
+      {
+        path: 'add',
+        name: 'policeadd',
+        component: () => import('@/views/police/add'),
+        meta: { title: '新增/修改派出所' }
       }
     ]
   },
