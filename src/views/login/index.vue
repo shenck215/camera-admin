@@ -98,7 +98,7 @@ export default {
         if (valid) {
           this.loading = true
           axios.post('/login', {
-            user_name: this.loginForm.username,
+            username: this.loginForm.username,
             password: this.loginForm.password
           }).then((res) => {
             this.loading = false
