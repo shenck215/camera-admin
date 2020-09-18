@@ -90,7 +90,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/police/list',
     name: 'setup',
-    meta: { title: '派出所管理', icon: 'el-icon-s-custom' },
+    meta: { title: '派出所管理', icon: 'el-icon-menu' },
     children: [
       {
         path: 'list',
@@ -103,6 +103,27 @@ export const constantRoutes = [
         name: 'policeadd',
         component: () => import('@/views/police/add'),
         meta: { title: '新增派出所' }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/list',
+    name: 'setup',
+    meta: { title: '用户管理', icon: 'el-icon-s-custom' },
+    children: [
+      {
+        path: 'list',
+        name: 'userlist',
+        component: () => import('@/views/user/list'),
+        meta: { title: '用户列表' }
+      },
+      {
+        path: 'add',
+        name: 'useradd',
+        component: () => import('@/views/user/add'),
+        meta: { title: '新增用户' }
       }
     ]
   },
