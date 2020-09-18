@@ -81,7 +81,7 @@ export const constantRoutes = [
         path: 'add',
         name: 'roadadd',
         component: () => import('@/views/road/add'),
-        meta: { title: '新增/修改路口' }
+        meta: { title: '新增路口' }
       }
     ]
   },
@@ -102,7 +102,7 @@ export const constantRoutes = [
         path: 'add',
         name: 'policeadd',
         component: () => import('@/views/police/add'),
-        meta: { title: '新增/修改派出所' }
+        meta: { title: '新增派出所' }
       }
     ]
   },

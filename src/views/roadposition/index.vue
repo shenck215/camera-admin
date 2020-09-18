@@ -2,17 +2,17 @@
   <div class="app-container">
     <el-form ref="form" class="roadposition_form" :model="form" label-width="100px">
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="路口方位">
             <el-input v-model="form.roadposition" placeholder="请输入" />
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="所属路口">
             <el-input v-model="form.road" placeholder="请输入" />
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="状态">
             <el-select v-model="form.status" placeholder="请选择">
               <el-option
@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           <el-button type="primary" :loading="listLoading" @click="onSearch">搜索</el-button>
         </el-col>
       </el-row>
