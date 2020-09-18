@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { axios } from '@/utils/request'
+import axios from '@/utils/request'
 import { apiDomain } from '@/utils/config'
 
 // 定时器
