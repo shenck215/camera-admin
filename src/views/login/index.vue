@@ -104,7 +104,7 @@ export default {
             this.loading = false
             // console.log(res)
             // let {token} = res.data
-            localStorage.setItem('token', res.data.token)
+            localStorage.setItem('Authorization', res.data.token)
             localStorage.setItem('username', _this.loginForm.username)
             _this.$router.push({ path: _this.redirect || '/' })
           }).catch(() => {

@@ -1,82 +1,176 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col :span="24">
-        <el-form ref="form" :model="form" label-width="160px">
-          <el-form-item label="摄像机1">
-            <el-radio-group v-model="form.big_cam_stat" size="medium" @change="radioChange">
-              <el-radio label="running" border>启动</el-radio>
-              <el-radio label="stoped" border>关闭</el-radio>
-            </el-radio-group>
+    <el-form ref="form" class="roadposition_form" :model="form" label-width="100px">
+      <el-row :gutter="20">
+        <el-col :span="5">
+          <el-form-item label="用户名">
+            <el-input v-model="form.roadname" placeholder="请输入" />
           </el-form-item>
-          <el-form-item label="摄像机2">
-            <el-radio-group v-model="form.middle_cam_stat" size="medium" @change="radioChange">
-              <el-radio label="running" border>启动</el-radio>
-              <el-radio label="stoped" border>关闭</el-radio>
-            </el-radio-group>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="所属派出所">
+            <el-input v-model="form.roadposition" placeholder="请输入" />
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" :loading="saveLoading" @click="onSubmit">保存</el-button>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="手机号">
+            <el-input v-model="form.road" placeholder="请输入" />
           </el-form-item>
-        </el-form>
-      </el-col>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="状态">
+            <el-select v-model="form.status" placeholder="请选择">
+              <el-option
+                v-for="item in statusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" :loading="listLoading" @click="onSearch">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row class="btns_box">
+      <el-button @click="handleClick('start')">新建</el-button>
+      <el-button @click="handleClick('stop')">修改</el-button>
+      <el-button @click="handleClick('start')">启动</el-button>
+      <el-button @click="handleClick('stop')">禁用</el-button>
+      <el-button @click="handleClick('service')">删除</el-button>
     </el-row>
+    <el-table
+      v-loading="listLoading"
+      :data="tableData"
+      style="width: 100%"
+      border
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+      />
+      <el-table-column
+        prop="date"
+        label="路口方位"
+        width="300"
+      />
+      <el-table-column
+        prop="name"
+        label="状态"
+        width="150"
+      />
+      <el-table-column
+        prop="address"
+        label="所属路口"
+      />
+    </el-table>
+    <div class="table_pagination">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="1000"
+        :page-size="10"
+        @current-change="currentChange"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from '@/utils/request'
+console.log(axios)
 
 export default {
   data() {
     return {
-      saveLoading: false,
+      listLoading: false,
+      statusOptions: [
+        {
+          value: 0,
+          label: '全部'
+        },
+        {
+          value: 1,
+          label: '启用'
+        },
+        {
+          value: 2,
+          label: '禁用'
+        }
+      ],
+      multipleSelection: [], // 选择的行
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }],
       form: {
-        big_cam_stat: '',
-        middle_cam_stat: ''
-      }
+        roadposition: '',
+        road: '',
+        status: 0
+      },
+      searchData: {} // 搜索数据
     }
   },
   mounted: function() {
-    this.getDefaultData()
+    this.getTableData(1)
   },
   methods: {
-    getDefaultData() {
-      axios.post('/get_sys_stat').then((res) => {
-        this.form.big_cam_stat = res.data.big_cam_stat
-        this.form.middle_cam_stat = res.data.middle_cam_stat
-      }).catch((a) => {
-        this.$message({
-          message: '获取数据异常',
-          type: 'error'
-        })
-      })
+    getTableData(pageNumber) {
+      // console.log({...this.searchData})
+      // axios.post('/get_sys_stat').then((res) => {
+      //   this.form.big_cam_stat = res.data.big_cam_stat
+      //   this.form.middle_cam_stat = res.data.middle_cam_stat
+      // }).catch((a) => {
+      //   this.$message({
+      //     message: '获取数据异常',
+      //     type: 'error'
+      //   })
+      // })
+      this.listLoading = true
+      // console.log(e)
+      setTimeout(() => {
+        this.listLoading = false
+      }, 500)
     },
-    radioChange(aa) {
-      console.log(aa)
+    handleSelectionChange(val) {
+      this.multipleSelection = val
     },
-    onSubmit() {
-      this.saveLoading = true
-      axios.post('/enable_proc', {
-        big_cam: (this.form.big_cam_stat === 'running' ? 1 : 0),
-        middle_cam: (this.form.middle_cam_stat === 'running' ? 1 : 0)
-      }).then((res) => {
-        this.saveLoading = false
-        this.$message({
-          message: '设置成功',
-          type: 'success'
-        })
-      }).catch((a) => {
-        this.saveLoading = false
-        this.$message({
-          message: '获取数据异常',
-          type: 'error'
-        })
-      })
+    currentChange(pageNumber) {
+      this.getTableData(pageNumber)
+    },
+    onSearch() {
+      this.searchData = this.form
+      this.getTableData(1)
+    },
+    handleClick(type) {
+      console.log(type)
+      console.log(this.multipleSelection)
     }
   }
 }
 </script>
 
 <style scoped>
+.btns_box {
+  margin-bottom: 20px;
+}
+.table_pagination {
+  margin-top: 20px;
+}
 </style>

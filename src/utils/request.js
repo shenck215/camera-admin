@@ -3,8 +3,8 @@ import axios from 'axios'
 import Router from '../router/index'
 import { apiDomain } from '@/utils/config'
 // 所有请求头加上token
-// import { getToken } from '@/utils/auth'
-// axios.defaults.headers.common['token'] = (getToken() || '')
+import { getToken } from '@/utils/auth'
+axios.defaults.headers.common['Authorization'] = (getToken() || '')
 // 设置 baseURL
 axios.defaults.baseURL = apiDomain
 
@@ -18,7 +18,7 @@ axios.interceptors.response.use(function(response) {
     //   message: '登录过期',
     //   type: 'error'
     // })
-    localStorage.removeItem('token')
+    localStorage.removeItem('Authorization')
     localStorage.removeItem('username')
     // console.log(Router)
     Router.push(`/login`)
