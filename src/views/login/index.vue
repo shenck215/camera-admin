@@ -106,7 +106,8 @@ export default {
             // let {token} = res.data
             localStorage.setItem('Authorization', res.data.token)
             localStorage.setItem('username', _this.loginForm.username)
-            _this.$router.push({ path: _this.redirect || '/' })
+            location.reload()
+            // _this.$router.push({ path: _this.redirect || '/' })
           }).catch(() => {
             this.loading = false
             this.$message({
