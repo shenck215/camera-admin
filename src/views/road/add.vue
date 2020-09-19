@@ -62,7 +62,7 @@
       />
     </div>
     <div class="savebtn">
-      <el-button type="primary" :loading="saveLoading" @click="doSubmit">设置完成</el-button>
+      <el-button type="primary" :loading="saveLoading" @click="doSubmit">设置路口完成</el-button>
     </div>
   </div>
 </template>
