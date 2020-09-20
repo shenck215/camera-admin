@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" class="roadposition_form" :model="form" label-width="100px">
+    <el-form ref="form" class="roadposition_form" :model="form" :rules="formRules" label-width="100px">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="用户名">
-            <el-input v-model="form.name" placeholder="支持中文，英文，数字，以及三种类型组合" />
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="form.username" placeholder="支持中文，英文，数字，以及三种类型组合" maxlength="20" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="所属派出所">
-            <el-select v-model="form.name1" placeholder="请选择" filterable>
+            <el-select v-model="form.psid" placeholder="请选择" filterable>
               <el-option
                 v-for="item in statusOptions"
                 :key="item.value"
@@ -24,15 +24,15 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="手机号">
-            <el-input v-model="form.mobile" placeholder="请输入手机号" />
+          <el-form-item label="手机号" prop="telephone">
+            <el-input v-model="form.telephone" placeholder="请输入手机号" maxlength="11" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="密码">
-            <el-input v-model="form.pw" placeholder="请输入密码" />
+            <el-input v-model="form.password" placeholder="请输入密码" maxlength="20" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -49,12 +49,41 @@
 
 <script>
 import axios from '@/utils/request'
-console.log(axios)
 
 export default {
   data() {
+    const validateInput = (rule, value, callback) => {
+      /* eslint-disable eqeqeq */
+      const reg = /^[\u4E00-\u9FA5A-Za-z0-9_]+$/
+      if (!value) {
+        callback(new Error('请输入必填项'))
+      } else if (!reg.test(value)) {
+        callback(new Error('输入不合规范'))
+      } else {
+        callback()
+      }
+    }
+    const validatePhone = (rule, value, callback) => {
+      /* eslint-disable eqeqeq */
+      const reg = /^1\d{10}$/
+      if (!value) {
+        // callback(new Error('请输入必填项'))
+      } else if (!reg.test(value)) {
+        callback(new Error('手机号输入不合规范'))
+      } else {
+        callback()
+      }
+    }
     return {
       saveLoading: false,
+      formRules: {
+        username: [
+          { required: true, trigger: 'change', validator: validateInput }
+        ],
+        telephone: [
+          { trigger: 'change', validator: validatePhone }
+        ]
+      },
       statusOptions: [
         {
           value: 0,
@@ -69,11 +98,7 @@ export default {
           label: '禁用'
         }
       ],
-      form: {
-        roadposition: '',
-        road: '',
-        status: 0
-      }
+      form: {}
     }
   },
   mounted: function() {
@@ -112,7 +137,31 @@ export default {
       console.log(this.multipleSelection)
     },
     doSubmit() {
-      this.saveLoading = true
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.saveLoading = true
+          axios.post('/api/user', {
+            ...this.form,
+            type: 2
+          }).then((res) => {
+            this.saveLoading = false
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1000,
+              onClose: () => {
+                location.reload()
+              }
+            })
+          }).catch((a) => {
+            this.saveLoading = false
+            this.$message({
+              message: '操作失败',
+              type: 'error'
+            })
+          })
+        }
+      })
     }
   }
 }

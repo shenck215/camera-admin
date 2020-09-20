@@ -35,8 +35,8 @@
       </el-row>
     </el-form>
     <el-row class="btns_box">
-      <el-button @click="handleClick('start')">新建</el-button>
-      <el-button @click="handleClick('stop')">修改</el-button>
+      <el-button @click="handleClickAdd">新建</el-button>
+      <el-button @click="handleClickUpdate">修改</el-button>
       <el-button @click="handleClick('start')">启动</el-button>
       <el-button @click="handleClick('stop')">禁用</el-button>
       <el-button @click="handleClick('service')">删除</el-button>
@@ -53,25 +53,33 @@
         width="55"
       />
       <el-table-column
-        prop="date"
-        label="路口方位"
+        prop="username"
+        label="用户名"
         width="300"
       />
       <el-table-column
-        prop="name"
-        label="状态"
+        prop="所属派出所"
+        label="psid"
         width="150"
       />
       <el-table-column
-        prop="address"
-        label="所属路口"
+        prop="telephone"
+        label="手机号"
       />
+      <el-table-column
+        prop="status"
+        label="状态"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.status === 1 ? '禁用' : '启用' }}
+        </template>
+      </el-table-column>
     </el-table>
     <div class="table_pagination">
       <el-pagination
         background
         layout="prev, pager, next"
-        :total="1000"
+        :total="paginationTotal"
         :page-size="10"
         @current-change="currentChange"
       />
@@ -81,44 +89,29 @@
 
 <script>
 import axios from '@/utils/request'
-console.log(axios)
+import Router from '../../router/index'
 
 export default {
   data() {
     return {
       listLoading: false,
+      paginationTotal: 0,
       statusOptions: [
         {
           value: 0,
           label: '全部'
         },
         {
-          value: 1,
+          value: 2,
           label: '启用'
         },
         {
-          value: 2,
+          value: 1,
           label: '禁用'
         }
       ],
       multipleSelection: [], // 选择的行
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      tableData: [],
       form: {
         roadposition: '',
         road: '',
@@ -132,21 +125,23 @@ export default {
   },
   methods: {
     getTableData(pageNumber) {
-      // console.log({...this.searchData})
-      // axios.post('/get_sys_stat').then((res) => {
-      //   this.form.big_cam_stat = res.data.big_cam_stat
-      //   this.form.middle_cam_stat = res.data.middle_cam_stat
-      // }).catch((a) => {
-      //   this.$message({
-      //     message: '获取数据异常',
-      //     type: 'error'
-      //   })
-      // })
       this.listLoading = true
-      // console.log(e)
-      setTimeout(() => {
+      axios.post('/api/users/search', {
+        pageNo: pageNumber,
+        pageSize: 10,
+        type: 2,
+        ...this.searchData
+      }).then((res) => {
         this.listLoading = false
-      }, 500)
+        this.tableData = res.data.data
+        this.paginationTotal = res.data.totalCount
+      }).catch((a) => {
+        this.listLoading = false
+        this.$message({
+          message: '获取数据异常',
+          type: 'error'
+        })
+      })
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
@@ -158,9 +153,11 @@ export default {
       this.searchData = this.form
       this.getTableData(1)
     },
-    handleClick(type) {
-      console.log(type)
-      console.log(this.multipleSelection)
+    handleClickAdd() {
+      Router.push('/user/add')
+    },
+    handleClickUpdate() {
+      console.log(11)
     }
   }
 }
